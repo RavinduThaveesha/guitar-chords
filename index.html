@@ -25,7 +25,7 @@
   var ctx = c.getContext('2d');
 
   ctx.beginPath();
-  ctx.fillStyle = 'white';
+  //ctx.fillStyle = 'white';
   
   //ctx.fillRect(x, y-10, 10, 10);
   
@@ -42,11 +42,16 @@
 
   ctx.lineWidth = 1;
 
-  for(var i = 1; i <= 6; i++) {
+  for(var i = 0; i < 6; i++) {
     ctx.moveTo(fretWidth, offsetY + fretHeight);
     ctx.lineTo(100 + fretWidth, offsetY + fretHeight);
 
-    ctx.fillText(i, -1, 10);
+    ctx.fillStyle = 'black';
+
+    if(i != 0) {
+      ctx.fillText(i, 0, offsetY + fretHeight);
+    }
+    
     ctx.stroke();
 
     offsetY = offsetY + 20;
