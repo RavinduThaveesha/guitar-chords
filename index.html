@@ -5,14 +5,10 @@
 
 </head>
 <body>
-  <canvas id="canvas" width="200" height="200"></canvas>
+  <canvas id="canvas1" width="140" height="140"></canvas>
+  <canvas id="canvas2" width="140" height="140"></canvas>
 
   <script>
-  var fretHeight = 20;
-  var fretWidth = 20;
-  var textOffsetY = -3;
-  var offsetY = 0;
-  var offsetX = 0;
 
   function removeX(array){
     var index = array.indexOf('x');
@@ -25,65 +21,76 @@
     return newArray;
   }
 
-  var chord = {
+  var chord1 = {
     name : 'A',
     type: 'm',
     placement: ['x', 0, 2, 2, 1, 0],
     fingering: ['x', 0, 2, 3, 1, 0],
   };
 
-  // var chord = {
-  //   name : 'C',
-  //   type: 'M',
-  //   placement: ['x', 3, 4, 4, 4, 3],
-  //   fingering: ['x', 1, 2, 3, 4, 1],
-  // };
-
-  var c = document.getElementById('canvas');
-  var ctx = c.getContext('2d');
+  var chord2 = {
+    name : 'C',
+    type: 'M',
+    placement: ['x', 3, 4, 4, 4, 3],
+    fingering: ['x', 1, 2, 3, 4, 1],
+  };
 
 
-  var maxFret = Math.max.apply(Math, removeX(chord.placement));
-  var minFret = Math.min.apply(Math, removeX(chord.placement));
-  //console.log(maxFret);
+  chord('canvas1', chord1);
+  chord('canvas2', chord2);
 
-  ctx.beginPath();
-  ctx.lineWidth = 1;
+  function chord(container, chord) {
+    var fretHeight = 20;
+    var fretWidth = 20;
+    var textOffsetY = -3;
+    var offsetY = 0;
+    var offsetX = 0;
 
-  for(var i = minFret; i < maxFret + 2; i++) {
-    ctx.moveTo(fretWidth, offsetY + fretHeight);
-    ctx.lineTo(100 + fretWidth, offsetY + fretHeight);
+    var c = document.getElementById(container);
+    var ctx = c.getContext('2d');
 
-    ctx.fillStyle = 'black';
-
-    if(i != 0) {
-      ctx.fillText(i, 0, offsetY + fretHeight);
-    }
+    var maxFret = Math.max.apply(Math, removeX(chord.placement));
+    var minFret = Math.min.apply(Math, removeX(chord.placement));
     
-    ctx.stroke();
 
-    offsetY = offsetY + 20;
+    if(minFret != 0) {
+      minFret = minFret - 1;
+    }
+
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+
+    for(var i = minFret; i < maxFret + 2; i++) {
+      ctx.fillStyle = 'black';
+      ctx.moveTo(fretWidth, offsetY + fretHeight);
+      ctx.lineTo(100 + fretWidth, offsetY + fretHeight);
+      ctx.fillText(i, 0, offsetY + fretHeight);
+      ctx.stroke();
+      offsetY = offsetY + 20;
+    }
+
+
+    for(var i = 0; i < 6; i++) {
+
+      var stringH = (maxFret - minFret + 1) * fretHeight;
+
+      //var y = (fretHeight * chord.placement[i]) + fretHeight + textOffsetY; 
+      //var x = fretWidth + offsetX - (fretWidth / 4);
+
+      ctx.fillStyle = 'white';
+      ctx.moveTo(offsetX + fretWidth, 0 + fretHeight);
+      ctx.lineTo(offsetX + fretWidth, stringH + fretHeight);
+    
+      //ctx.fillStyle = 'black';
+      //ctx.fillText(chord.fingering[i], x, y);
+      ctx.stroke();
+
+      offsetX = offsetX + fretWidth;
+    }
   }
 
 
-  for(var i = 0; i < 6; i++) {
-
-    var stringH = (maxFret - minFret + 1) * fretHeight;
-
-    var y = (fretHeight * chord.placement[i]) + fretHeight + textOffsetY; 
-    var x = fretWidth + offsetX - (fretWidth / 4);
-
-    ctx.fillStyle = 'white';
-    ctx.moveTo(offsetX + fretWidth, 0 + fretHeight);
-    ctx.lineTo(offsetX + fretWidth, stringH + fretHeight);
   
-    ctx.fillStyle = 'black';
-    ctx.fillText(chord.fingering[i], x, y);
-    ctx.stroke();
-
-    offsetX = offsetX + fretWidth;
-  }
-
 
 //ctx.font = "18px Arial";
 
