@@ -14,6 +14,17 @@
   var offsetY = 0;
   var offsetX = 0;
 
+  function removeX(array){
+    var index = array.indexOf('x');
+    var newArray = array.slice(0);
+    
+    if (index >= 0) {
+      newArray.splice(index, 1);
+    }
+
+    return newArray;
+  }
+
   var chord = {
     name : 'A',
     type: 'm',
@@ -21,28 +32,25 @@
     fingering: ['x', 0, 2, 3, 1, 0],
   };
 
+  // var chord = {
+  //   name : 'C',
+  //   type: 'M',
+  //   placement: ['x', 3, 4, 4, 4, 3],
+  //   fingering: ['x', 1, 2, 3, 4, 1],
+  // };
+
   var c = document.getElementById('canvas');
   var ctx = c.getContext('2d');
 
+
+  var maxFret = Math.max.apply(Math, removeX(chord.placement));
+  var minFret = Math.min.apply(Math, removeX(chord.placement));
+  //console.log(maxFret);
+
   ctx.beginPath();
-  //ctx.fillStyle = 'white';
-  
-  //ctx.fillRect(x, y-10, 10, 10);
-  
-  //vertical
-  // for(var i = 1; i <= 6; i++) {
-  //   ctx.moveTo(100, offsetY + fretHeight);
-  //   ctx.lineTo(0, offsetY + fretHeight);
-  //   ctx.stroke();
-
-  //   offsetY = offsetY + 20;
-  // }
-
-  //horizental
-
   ctx.lineWidth = 1;
 
-  for(var i = 0; i < 6; i++) {
+  for(var i = minFret; i < maxFret + 2; i++) {
     ctx.moveTo(fretWidth, offsetY + fretHeight);
     ctx.lineTo(100 + fretWidth, offsetY + fretHeight);
 
@@ -60,22 +68,20 @@
 
   for(var i = 0; i < 6; i++) {
 
+    var stringH = (maxFret - minFret + 1) * fretHeight;
+
+    var y = (fretHeight * chord.placement[i]) + fretHeight + textOffsetY; 
+    var x = fretWidth + offsetX - (fretWidth / 4);
+
     ctx.fillStyle = 'white';
     ctx.moveTo(offsetX + fretWidth, 0 + fretHeight);
-    ctx.lineTo(offsetX + fretWidth, 100 + fretHeight);
-
-    if(chord.placement[i] == 'x'){
-      var y = fretHeight + textOffsetY;
-    } else{
-      var y = (fretHeight * chord.placement[i]) + fretHeight + textOffsetY;
-    }
-    
-    var x = fretWidth + offsetX - (fretWidth / 4);
+    ctx.lineTo(offsetX + fretWidth, stringH + fretHeight);
+  
     ctx.fillStyle = 'black';
     ctx.fillText(chord.fingering[i], x, y);
     ctx.stroke();
 
-    offsetX = offsetX + 20;
+    offsetX = offsetX + fretWidth;
   }
 
 
